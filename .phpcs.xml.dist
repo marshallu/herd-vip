@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<ruleset name="Herd VIP">
+	<description>PHPCS ruleset for the Herd VIP plugin, aligned with WordPress VIP Go.</description>
+
+	<file>.</file>
+	<exclude-pattern>/vendor/*</exclude-pattern>
+
+	<arg name="extensions" value="php"/>
+	<arg name="basepath" value="."/>
+	<arg name="parallel" value="8"/>
+	<arg name="colors"/>
+	<arg value="sp"/>
+
+	<!-- Match the platform this plugin is deployed onto. -->
+	<config name="minimum_wp_version" value="6.4"/>
+	<config name="testVersion" value="8.0-"/>
+
+	<!-- Platform and security rules for the VIP Go infrastructure. -->
+	<rule ref="WordPress-VIP-Go"/>
+
+	<!-- WordPress-Extra pulls in WordPress-Core; together with Docs this enforces house style. -->
+	<rule ref="WordPress-Extra"/>
+	<rule ref="WordPress-Docs"/>
+
+	<!-- Flag syntax and functions unsupported on the PHP versions VIP runs. -->
+	<rule ref="PHPCompatibilityWP"/>
+
+	<!-- Everything global this plugin declares is namespaced by hand. -->
+	<rule ref="WordPress.NamingConventions.PrefixAllGlobals">
+		<properties>
+			<property name="prefixes" type="array">
+				<element value="herd_vip"/>
+				<element value="Herd_VIP"/>
+			</property>
+		</properties>
+	</rule>
+</ruleset>
