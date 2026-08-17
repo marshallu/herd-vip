@@ -1,5 +1,5 @@
 {
-	"name": "marshall-university/herd-vip",
+	"name": "marshallu/herd-vip",
 	"description": "Shared cache-invalidation helpers for Herd WordPress VIP applications.",
 	"type": "wordpress-muplugin",
 	"version": "0.1.0",
