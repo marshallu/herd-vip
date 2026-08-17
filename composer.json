@@ -2,7 +2,6 @@
 	"name": "marshallu/herd-vip",
 	"description": "Shared cache-invalidation helpers for Herd WordPress VIP applications.",
 	"type": "wordpress-muplugin",
-	"version": "0.1.0",
 	"license": "GPL-2.0-or-later",
 	"require": {
 		"php": ">=8.0"
