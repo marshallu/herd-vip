@@ -147,8 +147,8 @@ final class Herd_VIP_Cache_Purger {
 	 * @return void
 	 */
 	private static function purge_cloudflare_urls( $urls ) {
-		$api_token = getenv( 'CLOUDFLARE_API_TOKEN' );
-		$zone_id   = getenv( 'CLOUDFLARE_ZONE_ID' );
+		$api_token = self::get_env_var( 'CLOUDFLARE_API_TOKEN' );
+		$zone_id   = self::get_env_var( 'CLOUDFLARE_ZONE_ID' );
 
 		if ( empty( $api_token ) || empty( $zone_id ) ) {
 			return;
@@ -171,7 +171,31 @@ final class Herd_VIP_Cache_Purger {
 		);
 
 		if ( is_wp_error( $response ) || 200 !== wp_remote_retrieve_response_code( $response ) ) {
+			$reason = is_wp_error( $response )
+				? $response->get_error_message()
+				: sprintf( 'HTTP %d: %s', wp_remote_retrieve_response_code( $response ), wp_remote_retrieve_body( $response ) );
+
+			// Logged so a failed purge is visible in the VIP runtime logs instead of failing silently.
+			error_log( sprintf( 'Herd VIP: Cloudflare purge failed for %s (%s)', implode( ', ', $urls ), $reason ) ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- Intentional production logging of purge failures.
+
 			do_action( 'herd_vip_cloudflare_purge_failed', $response, $urls );
 		}
+	}
+
+	/**
+	 * Read an environment variable.
+	 *
+	 * VIP environment variables are only reliably exposed through vip_get_env_var(),
+	 * not as process environment variables, so getenv() is used only outside VIP.
+	 *
+	 * @param string $name Variable name.
+	 * @return string Value, or an empty string when unset.
+	 */
+	private static function get_env_var( $name ) {
+		if ( function_exists( 'vip_get_env_var' ) ) {
+			return (string) vip_get_env_var( $name, '' );
+		}
+
+		return (string) getenv( $name );
 	}
 }

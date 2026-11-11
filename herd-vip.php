@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Herd VIP
  * Description: Shared cache invalidation helpers for Herd WordPress VIP applications.
- * Version: 1.0.0
+ * Version: 1.0.1
  * Author: Marshall University
  * License: GPL-2.0-or-later
  *
